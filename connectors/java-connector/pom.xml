@@ -15,6 +15,10 @@
 			<url>http://repo1.maven.org/maven2/</url>
 		</repository>
 		<repository>
+                    <id>mvnrepository.com</id>
+                    <url>https://mvnrepository.com/artifact/</url>
+                </repository>
+		<repository>
 		    <id>oss.sonatype.org</id>
 		    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
@@ -39,7 +43,12 @@
 		<dependency>
 		  	<groupId>com.jcabi</groupId>
 		  	<artifactId>jcabi-aspects</artifactId>
-		  	<version>0.22</version>
+			<version>0.22.5</version>
+		</dependency>
+		<dependency>
+    			<groupId>com.jcabi</groupId>
+    			<artifactId>jcabi-maven-plugin</artifactId>
+    			<version>0.14.1</version>
 		</dependency>
 		<dependency>
   			<groupId>org.aspectj</groupId>
@@ -48,32 +57,38 @@
   			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-	        <groupId>org.slf4j</groupId>
-	        <artifactId>slf4j-simple</artifactId>
-	        <version>1.6.5</version>
-    	</dependency>
+		        <groupId>org.slf4j</groupId>
+		        <artifactId>slf4j-simple</artifactId>
+	       		<version>1.6.5</version>
+    		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 		</dependency>
 	</dependencies>
-
+	<pluginRepositories>
+  		<pluginRepository>
+    			<id>oss.sonatype.org</id>
+    			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+  		</pluginRepository>
+	</pluginRepositories>
 	<build>
 		<plugins>
 			<plugin>
-       			<groupId>com.jcabi</groupId>
-       			<artifactId>jcabi-maven-plugin</artifactId>
-       			<version>0.13.1</version>
-       			<executions>
-         			<execution>
-           				<goals>
-             					<goal>ajc</goal>
-           				</goals>
-         			</execution>
-       			</executions>
-     			</plugin>
-      	</plugins>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-maven-plugin</artifactId>
+                        <version>0.14.1</version>
+                <!--        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>ajc</goal>
+                                </goals>
+                            </execution>
+                        </executions> -->
+                    </plugin>      
+
+	</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -97,6 +112,11 @@
 						</archive>
 					</configuration>
 				</plugin>
+        			<plugin>
+          				<groupId>com.jcabi</groupId>
+				        <artifactId>jcabi-maven-plugin</artifactId>
+		  		        <version>0.14.1</version>
+        			</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
