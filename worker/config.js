@@ -4,7 +4,7 @@ module.exports = {
 		port: 5672, 
 		queue: 'batam',
 		username : 'batam',
-		password : 'batam2',
+		password : 'batam_pwd',
 		vhost : 'batam'
 	},
 	database:{
