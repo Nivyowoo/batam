@@ -1,6 +1,5 @@
 var _ = require('underscore');
 var util = require('util');
-var validator = require('validator');
 
 /**
  * API path /api/commits
@@ -52,16 +51,16 @@ function findCommitList(req, res, next){
 		return next(new Error('No build_id, draw, length or start query params.'));
 	}	
 	
-	if(validator.isNull(req.query.build_id) || !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.query.build_id) /*|| !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('build_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
-	if(validator.isNull(req.query.draw) || !validator.isInt(req.query.draw)){
+	if(_.isNull(req.query.draw) || isNaN(req.query.draw)){
 		return next(new Error('draw param should not be null and should be a number.'));
 	}
-	if(validator.isNull(req.query.length) || !validator.isInt(req.query.length)){
+	if(_.isNull(req.query.length) || isNaN(req.query.length)){
 		return next(new Error('length param should not be null and should be a number.'));
 	}
-	if(validator.isNull(req.query.start) || !validator.isInt(req.query.start)){
+	if(_.isNull(req.query.start) || isNaN(req.query.start)){
 		return next(new Error('start param should not be null and should be a number.'));
 	}
 	

@@ -12,11 +12,11 @@
   "license": "MIT",
   "dependencies": {
     "amqp": "^0.2.0",
-    "mongodb": "^1.4.40",
-    "mongoskin": "^1.4.4",
+    "mongodb": "^2.2.29",
+    "mongoskin": "^2.1.0",
     "underscore": "^1.7.0"
   },
   "devDependencies": {
-    "mocha": "^2.0.1"
+    "mocha": "^3.4.2"
   }
 }

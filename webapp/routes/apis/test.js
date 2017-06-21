@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var util = require('util');
 var mongoskin = require('mongoskin');
-var validator = require('validator');
 var batam_util = config = require('../../util/util.js');
 
 /**
@@ -82,24 +81,24 @@ function findTestList(req, res, next){
 	if(!req.query.draw || !req.query.length || !req.query.start || !req.query.build_id){
 		return next(new Error('No draw, length, start, build_id or report_id query params.'));
 	}
-	//if(validator.isNull(req.query.build_id) || !validator.isLength(req.query.build_id, 5, 30) || !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
-	if(validator.isNull(req.query.build_id) || !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
+	//if(_.isNull(req.query.build_id) || !validator.isLength(req.query.build_id, 5, 30) || !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.query.build_id) /*|| !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('build_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
-	//if(validator.isNull(req.query.report_id) || !validator.isLength(req.query.report_id, 5, 60) || !validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
-	if(!validator.isNull(req.query.report_id)){
-		if(!validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
-			return next(new Error('report_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
-		}
+	//if(_.isNull(req.query.report_id) || !validator.isLength(req.query.report_id, 5, 60) || !validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
+	if(!_.isNull(req.query.report_id)){
+//		if(!validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
+//			return next(new Error('report_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
+//		}
 	}
 		
-	if(validator.isNull(req.query.draw) || !validator.isInt(req.query.draw)){
+	if(_.isNull(req.query.draw) || isNaN(req.query.draw)){
 		return next(new Error('draw param should not be null and should be a number.'));
 	}
-	if(validator.isNull(req.query.length) || !validator.isInt(req.query.length)){
+	if(_.isNull(req.query.length) || isNaN(req.query.length)){
 		return next(new Error('length param should not be null and should be a number.'));
 	}
-	if(validator.isNull(req.query.start) || !validator.isInt(req.query.start)){
+	if(_.isNull(req.query.start) || isNaN(req.query.start)){
 		return next(new Error('start param should not be null and should be a numbe.r'));
 	}
 	
@@ -178,13 +177,13 @@ function findStat(req, res, next){
 	if(!req.query.build_id || !req.query.graph) {
 		return next(new Error('No build_id or graph query params.'));
 	}
-	if(validator.isNull(req.query.build_id) || !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.query.build_id) /*|| !validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('build_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
-	if(!validator.isNull(req.query.report_id) && !validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.query.report_id) /*&& !validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('report_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
-	if(validator.isNull(req.query.graph) || !validator.matches(req.query.graph, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.query.graph) /*|| !validator.matches(req.query.graph, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('graph param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
 	
@@ -216,9 +215,9 @@ function findTest(req, res, next){
 	if(!req.params.test_id) {
 		return next(new Error('No test_id param in url.'));
 	}
-	if(validator.isNull(req.params.test_id) || !validator.isMongoId(req.params.test_id)){
-		return next(new Error('test_id param should not be null and correspond to a MongoDB Id.'));
-	}
+//	if(_.isNull(req.params.test_id) || !validator.isMongoId(req.params.test_id)){
+//		return next(new Error('test_id param should not be null and correspond to a MongoDB Id.'));
+//	}
 	
 	//Fetch test requested.
 	req.collections.tests.findOne({_id: mongoskin.helper.toObjectID(req.params.test_id)}, fetchTest);
@@ -307,20 +306,20 @@ function findTestCriterias(req, res, next){
 	};
 	
 	//Validate inputs.
-	if(validator.isNull(req.query.report_id) && validator.isNull(req.query.build_id)){
+	if(_.isNull(req.query.report_id) && _.isNull(req.query.build_id)){
 		return next(new Error('report_id or build_id param should be not null'));
 	}
-	if(!validator.isNull(req.query.report_id)){
-		if(!validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
-			return next(new Error(req.query.report_id+'report_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
-		}
+	if(!_.isNull(req.query.report_id)){
+//		if(!validator.matches(req.query.report_id, '[0-9a-zA-Z_-]+')){
+//			return next(new Error(req.query.report_id+'report_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
+//		}
 	}
-	if(!validator.isNull(req.query.build_id)){
-		if(!validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
-			return next(new Error('build_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
-		}
+	if(!_.isNull(req.query.build_id)){
+//		if(!validator.matches(req.query.build_id, '[0-9a-zA-Z_-]+')){
+//			return next(new Error('build_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
+//		}
 	}
-	if(validator.isNull(req.query.report_id) && validator.isNull(req.query.build_id)){
+	if(_.isNull(req.query.report_id) && _.isNull(req.query.build_id)){
 		return next(new Error("Either build_id or report_id should be defined"));
 	}
 	
@@ -391,16 +390,16 @@ function findTestHistory(req, res, next){
 	if(!req.query.draw || !req.query.length || !req.query.start){
 		return next(new Error('No draw, length, start query params.'));
 	}
-	if(validator.isNull(req.params.test_id) || !validator.matches(req.params.test_id, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.params.test_id) /*|| !validator.matches(req.params.test_id, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('build_name param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
-	if(validator.isNull(req.query.draw) || !validator.isInt(req.query.draw)){
+	if(_.isNull(req.query.draw) || isNaN(req.query.draw)){
 		return next(new Error('draw param should not be null and should be a number.'));
 	}
-	if(validator.isNull(req.query.length) || !validator.isInt(req.query.length)){
+	if(_.isNull(req.query.length) || isNaN(req.query.length)){
 		return next(new Error('length param should not be null and should be a number.'));
 	}
-	if(validator.isNull(req.query.start) || !validator.isInt(req.query.start)){
+	if(_.isNull(req.query.start) || isNaN(req.query.start)){
 		return next(new Error('start param should not be null and should be a number.'));
 	}
 	

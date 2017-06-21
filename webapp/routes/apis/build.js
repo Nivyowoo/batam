@@ -1,6 +1,5 @@
 var _ = require('underscore');
 var util = require('util');
-var validator = require('validator');
 
 function isNullOrUndefined(value){
 	return _.isUndefined(value) || _.isNull(value);
@@ -216,8 +215,8 @@ function findBuild(req, res, next){
 	if(!req.params.build_id) {
 		return next(new Error('No build_id param in url.'));
 	}
-	//if(validator.isNull(req.params.build_id) || !validator.isLength(req.params.build_id, 5, 30) || !validator.matches(req.params.build_id, '[0-9a-zA-Z_-]+')){
-	if(validator.isNull(req.params.build_id) || !validator.matches(req.params.build_id, '[0-9a-zA-Z_-]+')){
+	//if(_.isNull(req.params.build_id) || !validator.isLength(req.params.build_id, 5, 30) || !validator.matches(req.params.build_id, '[0-9a-zA-Z_-]+')){
+	if(_.isNull(req.params.build_id) /*|| !validator.matches(req.params.build_id, '[0-9a-zA-Z_-]+')*/){
 		return next(new Error('build_id param should not be null and match the following regex pattern [0-9a-zA-Z_-]+ .'));
 	}
 		
