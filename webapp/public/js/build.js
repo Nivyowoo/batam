@@ -190,15 +190,15 @@ var BuildPage = (function (config) {
             '				<strong>'+report.report_name +'</strong>'+
             '			</div>' +
             '			<div class="col-sm-2 col-sm-offset-2">';
-            if(report.tests == null || report.tests.all == undefined){
+            if(report.tests == null || report.tests.count == undefined){
                 listHtml += '		<strong> Tests <span class="label label-info">0</span></strong>';
             }else{
-                if(report.tests.all.trend == 1){
-                    listHtml += '		<strong> Tests <span>'+report.tests.all.value+' <span class="glyphicon glyphicon-chevron-up"></span></span></strong>';
-                }else if(report.tests.all.trend == -1){
-                    listHtml +=	'		<strong> Tests <span>'+report.tests.all.value+' <span class="glyphicon glyphicon-chevron-down"></span></span></strong>';
+                if(report.tests.count.trend == 1){
+                    listHtml += '		<strong> Tests <span>'+report.tests.count.value+' <span class="glyphicon glyphicon-chevron-up"></span></span></strong>';
+                }else if(report.tests.count.trend == -1){
+                    listHtml +=	'		<strong> Tests <span>'+report.tests.count.value+' <span class="glyphicon glyphicon-chevron-down"></span></span></strong>';
                 }else{
-                    listHtml += '		<strong> Tests <span>'+report.tests.all.value+'</span></strong>';
+                    listHtml += '		<strong> Tests <span>'+report.tests.count.value+'</span></strong>';
                 }
             }
             listHtml += '			</div>' +

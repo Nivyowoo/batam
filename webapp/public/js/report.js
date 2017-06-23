@@ -2,7 +2,6 @@ var ReportPage = (function (config) {
     var data = {};
 
     var initPage = function(){
-        // Initial fetch
         $.getJSON('/api/projects/'+data.project_id+'/branches/'+data.branch_id+'/builds/'+data.build_id+'/commits/'+data.commit_id+'/reports/'+data.report_id, displayReport)
             .error(handleError)
             .fail(handleFailure);
@@ -28,7 +27,7 @@ var ReportPage = (function (config) {
         var description = report.description == undefined ? data.notAvailable : report.description;
         $('#report_description').html(description);
         var start_date = report.start_date == undefined ? data.notAvailable : moment(report.start_date).format('MMM Do YYYY, h:mm:ss a');
-        $('#report_date').html(start_date);
+        $('#report_start_date').html(start_date);
         var end_date = report.end_date == undefined ? data.notAvailable : moment(report.end_date).format('MMM Do YYYY, h:mm:ss a');
         $('#report_end_date').html(end_date);
         if(report.status != null){
@@ -54,7 +53,7 @@ var ReportPage = (function (config) {
         }
 
         if(report.tests != null && report.tests.flaky != null){
-            $('#report_regressions').html(formatWithLabel(report.tests.flaky.value, report.tests.flaky.trend, 0, false));
+            $('#report_flaky').html(formatWithLabel(report.tests.flaky.value, report.tests.flaky.trend, 0, false));
         }
 
         if(report.tests != null && report.tests.new_regressions != null){
@@ -97,56 +96,44 @@ var ReportPage = (function (config) {
             }
         }
 
-        if(report.tests != null && report.tests.all != null){
-            if(report.tests.all.trend == -1){
-                $('#report_tests').html(report.tests.all.value+' <span class="glyphicon glyphicon-chevron-down"></span>');
-            }else if(report.tests.all.trend == 1){
-                $('#report_tests').html(report.tests.all.value+' <span class="glyphicon glyphicon-chevron-up"></span>');
+        if(report.tests != null && report.tests.count != null){
+            if(report.tests.count.trend == -1){
+                $('#report_tests').html(report.tests.count.value+' <span class="glyphicon glyphicon-chevron-down"></span>');
+            }else if(report.tests.count.trend == 1){
+                $('#report_tests').html(report.tests.count.value+' <span class="glyphicon glyphicon-chevron-up"></span>');
             }else{
-                $('#report_tests').html(report.tests.all.value);
+                $('#report_tests').html(report.tests.count.value);
             }
         }
 
     };
 
-    var displayTests = function(data){
+    var displayTests = function(){
         // load tests
         var columns = [];
         // Add mandatory default column Name
         columns[0] = {title: "Name"};
-        for(var i = 0; i < data.criteriasIds.length; i++){
-            columns[i+1] = {};
-            if(data.visibleColumns[i] == undefined || data.visibleColumns[i] == false){
-                columns[i+1].title = data.criteriasIds[i];
-                columns[i+1].visible = false;
-            }else{
-                columns[i+1].title = data.criteriasIds[i];
-                columns[i+1].visible = true;
-            }
-        }
-
-        for(var i = 0; i < data.criteriasIds.length; i++){
-            if(data.criteriasIds[i] == 'Tags'){
-                var checkedTags = $("#search_tags input:checkbox:checked").map(function(){
-                  return $(this).val();
-                }).get();
-                if(checkedTags != null && checkedTags.length != 0){
-                    data['tags'] = ""+checkedTags;
-                }
-                continue;
-            }
-            var currentValue = $('#'+replaceAll(" ", "_", data.criteriasIds[i].toLowerCase())).val();
-            if(currentValue != undefined && currentValue != null && currentValue != ""){
-                data[replaceAll(" ","_", data.criteriasIds[i].toLowerCase())] = $('#'+replaceAll(" ", "_", data.criteriasIds[i].toLowerCase())).val();
-            }
-        }
+        columns[1] = {title: "Prev Status"};
+        columns[2] = {title: "Status"};
+        columns[3] = {title: "Flaky"};
+        columns[4] = {title: "Duration"};
+//        for(var i = 0; i < data.criteriasIds.length; i++){
+//            columns[i+1] = {};
+//            if(data.visibleColumns[i] == undefined || data.visibleColumns[i] == false){
+//                columns[i+1].title = data.criteriasIds[i];
+//                columns[i+1].visible = false;
+//            }else{
+//                columns[i+1].title = data.criteriasIds[i];
+//                columns[i+1].visible = true;
+//            }
+//        }
 
         $('#tests').DataTable( {
             destroy: true,
             serverSide: true,
             searching: false,
             ajax: {
-                url: "/api/tests",
+                url: '/api/projects/'+data.project_id+'/branches/'+data.branch_id+'/builds/'+data.build_id+'/commits/'+data.commit_id+'/reports/'+data.report_id+'/tests',
                 "data": data,
                 type: 'GET',
                 timeout: 15000,
@@ -161,18 +148,17 @@ var ReportPage = (function (config) {
                 dataSrc: function ( json ) {
                     var result = [];
                     result.draw = json.draw;
-                    result.recordsFiltered = json.recordsFiltered;
-                    result.recordsTotal = result.recordsTotal;
-                    for ( var i = 0 ; i < json.data.length ; i++ ) {
+                    result.recordsFiltered = json.tests.length;
+                    result.recordsTotal = json.tests.length;
+                    for ( var i = 0 ; i < json.tests.length ; i++ ) {
                         result[i] = [];
-                        result[i][0] = '<a href="/'+json.data[i][0]+'/report/'+json.data[i][1]+'/test/'+json.data[i][2]+'">'+json.data[i][3]+'</a>';
-                        result[i][1] = formatStatus(json.data[i][5]);
-                        result[i][2] = formatRegression(json.data[i][5], json.data[i][6]);
-                        result[i][3] = formatTime(json.data[i][7]);
-                        result[i][4] = ''+json.data[i][8];
-                        for(var j = 9; j < json.data[i].length; j++){
-                            result[i][j-4] = json.data[i][j];
-                        }
+                        result[i][0] = json.tests[i].name;
+                        result[i][1] = formatStatus(json.tests[i].previous_status);
+                        result[i][2] = formatStatus(json.tests[i].status);
+                        result[i][3] = json.tests[i].flaky;
+                        //result[i][4] = formatTime(json.tests[i].duration);
+                        result[i][4] = json.tests[i].duration;
+
                     }
                     return result;
                 }
@@ -180,15 +166,15 @@ var ReportPage = (function (config) {
             columns: columns,
             drawCallback: function(settings) {
                 data.table = $('#tests').DataTable();
-                for(var i = 5; i < data.criteriasIds.length; i++){
-                    //i starts at 5 since we always want to display default columns Status, Regression, Time and Tags.
-                    //i+1 is needed since the 0 column is the mandatory name column not listed in the criteriasIds list.
-                    if(data.visibleColumns[i] == undefined || data.visibleColumns[i] == false){
-                        data.table.column(i+1).visible(false);
-                    }else{
-                        data.table.column(i+1).visible(true);
-                    }
-                }
+//                for(var i = 5; i < data.criteriasIds.length; i++){
+//                    //i starts at 5 since we always want to display default columns Status, Regression, Time and Tags.
+//                    //i+1 is needed since the 0 column is the mandatory name column not listed in the criteriasIds list.
+//                    if(data.visibleColumns[i] == undefined || data.visibleColumns[i] == false){
+//                        data.table.column(i+1).visible(false);
+//                    }else{
+//                        data.table.column(i+1).visible(true);
+//                    }
+//                }
             }
         });
     };
@@ -207,13 +193,13 @@ var ReportPage = (function (config) {
         		commit_id: this.commit_id,
         		report_id: this.report_id,
         		notAvailable: '',
-                criteriasIds: [],
                 table: null,
                 graph: '',
                 visibleColumns: [true, true, true]
             };
 
     		initPage();
+    		displayTests();
 
         }
     }

@@ -54,6 +54,7 @@ app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id', routes
 app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id', routes.apis.builds.build);
 app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id/reports', routes.apis.reports.list);
 app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id/reports/:report_id', routes.apis.reports.show);
+app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id/reports/:report_id/tests', routes.apis.tests.list);
 
 //Define Routes and views
 app.get('/', routes.pages.projects.showAll);
