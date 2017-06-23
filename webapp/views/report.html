@@ -1,182 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CI Performance Tracing and Statistics</title>
+	<head>
+		<base href="/">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>TraCI - Build Artifact UI, Performance Tracing and Statistics</title>
 
-<!-- Bootstrap -->
-<link href="../../css/bootstrap.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+		<!-- Bootstrap -->
+		<link href="/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.min.css" />
+		<!-- DataTables CSS -->
+		<link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.min.css" />
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
-	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">TraCI - Build Artifact UI, Perf Tracing and Stats</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="/">Projects</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/">CI Performance Tracing and Statistics</a>
-			</div>
-			<ul class="nav navbar-nav">
-				<li><a href="/">Builds</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="page-header" style="margin-top: 75px">
-				<h1>Tests Report</h1>
-				<a href="/{{build_id}}">{{build_name}}</a>
-			</div>
-		</div>
-		<div class="row">
-			<div id="main_panel" class="panel">
-				<div class="panel-heading">
-					<h3 class="panel-title" id="report_header"></h3>
+			<div class="row">
+				<div class="page-header" style="margin-top: 75px">
+					<h1>Test Report</h1>
+					<a href="/{{project_id}}/{{branch_id}}/{{build_id}}/{{commit_id}}">{{build_name}}</a>
 				</div>
-				<div id="collapseOne" class="panel-collapse collapse in">
-					<div class="panel-body">
-						 <div class="row">
-							<div class="col-md-12">
-								<dl class="dl-horizontal">
-									<dt>Name</dt>
-									<dd id="report_name"></dd>
-
-									<dt>Description</dt>
-									<dd id="report_description"></dd>
-								</dl>
-							</div><!-- /.col-md-12 -->
-						</div><!-- /.row -->
-						<div class="row">
-							<div class="col-md-6">
-								<h5 style="text-align: center">
-									<strong>General</strong>
-								</h5>
-								<dl class="dl-horizontal">
-									<dt>Start Date</dt>
-									<dd id="report_date"></dd>
-									
-									<dt>End Date</dt>
-									<dd id="report_end_date"></dd>
-
-									<dt>Status</dt>
-									<dd id="report_status"></dd>
-
-									<dt>Duration</dt>
-									<dd id="report_duration"></dd>
-
-									<dt>Logs</dt>
-									<dd id="report_logs"></dd>
-								</dl>
-							</div>
-							<div class="col-md-6">
-								<h5 style="text-align: center">
-									<strong>Tests Summary</strong>
-								</h5>
-								<dl class="dl-horizontal">
-									<dt>Total</dt>
-									<dd id="report_tests"></dd>
-
-									<dt>Pass</dt>
-									<dd id="report_passes"></dd>
-									
-									<dt>Regressions</dt>
-									<dd id="report_regressions"></dd>
-
-									<dt>Failures</dt>
-									<dd id="report_failures"></dd>
-
-									<dt>Errors</dt>
-									<dd id="report_errors"></dd>
-
-									<dt title="New Regressions">New</dt>
-									<dd id="report_new_regressions"></dd>
-
-									<dt title="Fixed Regressions">Fixed</dt>
-									<dd id="report_fixed_regressions"></dd>
-								</dl>
-							</div>
-						</div>
-						<div class="form-horizontal">
-							<div class="form-group">
-								<div class="row">
-									<label for="graphs_link" class="col-sm-2 control-label">Display Graph</label>
-									<div class="col-md-2">
-										<select class="form-control" id="graphs_link" name="graphs_link"></select>
-									</div>
-								</div>	
-							</div>	
-						</div>
-						<div class="row">
-							<div id="graph-panel"></div>
-						</div>
+			</div>
+			<div class="row">
+				<div id="main_panel" class="panel">
+					<div class="panel-heading">
+						<h3 class="panel-title" id="report_header"></h3>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<a class="btn btn-default" data-toggle="collapse" href="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch"><span class="glyphicon glyphicon-search"></span> Search</a>
-				<h3 id="thumbnails">Tests</h3>
-				
-					<div class="collapse" id="collapseSearch">
-						<div class="well">
-							<div class="form-horizontal">
-								<div id="tests_search_criterias" class="form-group">
-									<div class="col-sm-offset-10 col-sm-2">
-										<button id="tests_search" class="btn btn-default">Search</button>
-										<button id="copy-clipboard" data-toggle="tooltip"
-											data-placement="top" title="Copy Search URL"
-											class="btn btn-default" type="button">
-											<i class="fa fa-clipboard"></i>
-										</button>
-									</div>
+					<div id="collapseOne" class="panel-collapse collapse in">
+						<div class="panel-body">
+							 <div class="row">
+								<div class="col-md-12">
+									<dl class="dl-horizontal">
+										<dt>Name</dt>
+										<dd id="report_name"></dd>
+
+										<dt>Description</dt>
+										<dd id="report_description"></dd>
+									</dl>
+								</div><!-- /.col-md-12 -->
+							</div><!-- /.row -->
+							<div class="row">
+								<div class="col-md-6">
+									<h5 style="text-align: center">
+										<strong>General</strong>
+									</h5>
+									<dl class="dl-horizontal">
+										<dt>Start Date</dt>
+										<dd id="report_date"></dd>
+
+										<dt>End Date</dt>
+										<dd id="report_end_date"></dd>
+
+										<dt>Status</dt>
+										<dd id="report_status"></dd>
+
+										<dt>Duration</dt>
+										<dd id="report_duration"></dd>
+
+										<dt>Logs</dt>
+										<dd id="report_logs"></dd>
+									</dl>
+								</div>
+								<div class="col-md-6">
+									<h5 style="text-align: center">
+										<strong>Tests Summary</strong>
+									</h5>
+									<dl class="dl-horizontal">
+										<dt>Total</dt>
+										<dd id="report_tests"></dd>
+
+										<dt>Pass</dt>
+										<dd id="report_passes"></dd>
+
+										<dt>Regressions</dt>
+										<dd id="report_regressions"></dd>
+
+										<dt>Failures</dt>
+										<dd id="report_failures"></dd>
+
+										<dt>Errors</dt>
+										<dd id="report_errors"></dd>
+
+										<dt title="New Regressions">New</dt>
+										<dd id="report_new_regressions"></dd>
+
+										<dt title="Fixed Regressions">Fixed</dt>
+										<dd id="report_fixed_regressions"></dd>
+									</dl>
 								</div>
 							</div>
 						</div>
 					</div>
-				<div>
-					<b id="show_hide_columns">Show/Hide columns: </b>
 				</div>
-				<table id="tests" class="display" cellspacing="0" width="100%"></table>
 			</div>
-			<!-- /.col-md-12 -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3 id="thumbnails">Tests</h3>
+					<table id="tests" class="display" cellspacing="0" width="100%"></table>
+				</div>
+				<!-- /.col-md-12 -->
+			</div>
+			<a href="/api/projects/{{project_id}}/branches/{{branch_id}}/builds/{{build_id}}/commits/{{commit_id}}/reports/{{report_id}}">Rest</a>
 		</div>
-		<a href="/api/reports/{{report_id}}">Rest</a>
-	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script type="text/javascript" src="../../js/vendors/bootstrap.min.js"></script>
-	<script type="text/javascript" src="../../js/vendors/moment.min.js"></script>
-	<script type="text/javascript" src="../../js/vendors/underscore.min.js"></script>
-	<script type="text/javascript" src="../../js/batam.util.js"></script>
-	<script type="text/javascript" src="../../js/vendors/ZeroClipboard.min.js"></script>
-	<!-- DataTables -->
-	<script type="text/javascript" charset="utf8" src="../../js/vendors/jquery.dataTables.min.js"></script>
-	<!-- Google Visualization Chart -->
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript">
-		google.load("visualization", "1.1", {packages:["corechart"]});
-	</script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/vendors/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/js/vendors/moment.min.js"></script>
+		<script type="text/javascript" src="/js/vendors/underscore.min.js"></script>
+		<script type="text/javascript" src="/js/batam.util.js"></script>
+		<script type="text/javascript" src="/js/vendors/ZeroClipboard.min.js"></script>
+		<!-- DataTables -->
+		<script type="text/javascript" charset="utf8" src="/js/vendors/jquery.dataTables.min.js"></script>
+		<!-- Google Visualization Chart -->
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1.1", {packages:["corechart"]});
+		</script>
 
-	<script type="text/javascript">
-    	var ServerConfig = { "build_id": "{{build_id}}", "report_id": "{{report_id}}" };
-	</script>
-	<script type="text/javascript" src="../../js/report.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			ReportPage.init();
-		});
-	</script>
-</body>
+		<script type="text/javascript">
+			var ServerConfig = { "project_id": "{{project_id}}", "branch_id": "{{branch_id}}", "build_id": "{{build_id}}", "commit_id": "{{commit_id}}", "report_id": "{{report_id}}" };
+		</script>
+		<script type="text/javascript" src="/js/report.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				ReportPage.init();
+			});
+		</script>
+	</body>
 </html>

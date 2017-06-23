@@ -12,8 +12,6 @@ var mongoskin = require('mongoskin'),
   	db = mongoskin.db(dbUrl, {safe:true}),
   	collections = {
     	builds: db.collection('builds'),
-    	buildcriterias : db.collection('buildcriterias'),
-    	commits: db.collection('commits'),
     	reports: db.collection('reports'),
     	testcriterias: db.collection('testcriterias'),
     	tests: db.collection('tests')
@@ -47,28 +45,35 @@ if('development' == app.get('env')){
 	app.use(errorHandler());
 }
 
-//Define Routes and views
-app.get('/', routes.pages.build.showAll);
-app.get('/:build_id', routes.pages.build.show);
-app.get('/:build_id/search', routes.pages.build.search);
-app.get('/:build_id/report/:report_id', routes.pages.report.show);
-app.get('/:build_id/report/:report_id/test/:test_id', routes.pages.test.show);
 
 //REST API ROUTES
-app.get('/api/commits', routes.apis.commit.list);
+app.get('/api/projects', routes.apis.builds.project_list);
+app.get('/api/projects/:project_id', routes.apis.builds.branch_list);
+app.get('/api/projects/:project_id/branches/:branch_id', routes.apis.builds.build_list);
+app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id', routes.apis.builds.latest_build);
+app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id', routes.apis.builds.build);
+app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id/reports', routes.apis.reports.list);
+app.get('/api/projects/:project_id/branches/:branch_id/builds/:build_id/commits/:commit_id/reports/:report_id', routes.apis.reports.show);
 
-app.get('/api/builds', routes.apis.build.list);
-app.get('/api/builds/criterias', routes.apis.build.criterias);
-app.get('/api/builds/:build_id', routes.apis.build.view);
+//Define Routes and views
+app.get('/', routes.pages.projects.showAll);
+app.get('/:project_id', routes.pages.projects.show);
+app.get('/:project_id/:branch_id', routes.pages.builds.showAll);
+app.get('/:project_id/:branch_id/:build_id', routes.pages.builds.show);
+app.get('/:project_id/:branch_id/:build_id/:commit_id', routes.pages.builds.show);
+app.get('/:project_id/:branch_id/:build_id/:commit_id/:report_id', routes.pages.reports.show);
 
-app.get('/api/reports', routes.apis.report.list);
-app.get('/api/reports/:report_id', routes.apis.report.view);
+//app.get('/:build_id/report/:report_id', routes.pages.report.show);
+//app.get('/:build_id/report/:report_id/test/:test_id', routes.pages.test.show);
 
-app.get('/api/tests', routes.apis.test.list);
-app.get('/api/tests/criterias', routes.apis.test.criterias);
-app.get('/api/tests/stat', routes.apis.test.stat);
-app.get('/api/tests/:test_id', routes.apis.test.view);
-app.get('/api/tests/:test_id/history', routes.apis.test.history);
+//app.get('/api/reports', routes.apis.report.list);
+//app.get('/api/reports/:report_id', routes.apis.report.view);
+
+//app.get('/api/tests', routes.apis.test.list);
+//app.get('/api/tests/criterias', routes.apis.test.criterias);
+//app.get('/api/tests/stat', routes.apis.test.stat);
+//app.get('/api/tests/:test_id', routes.apis.test.view);
+//app.get('/api/tests/:test_id/history', routes.apis.test.history);
 
 app.all('*', function(req, res){
   res.status(404).end();

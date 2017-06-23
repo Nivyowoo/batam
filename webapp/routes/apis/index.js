@@ -1,4 +1,3 @@
-exports.build = require('./build');
-exports.commit = require('./commit');
-exports.report = require('./report');
-exports.test = require('./test');
+exports.builds = require('./builds');
+exports.reports = require('./reports');
+exports.tests = require('./tests');
